@@ -3,30 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Event Management</h1>
-        <h2>Event List</h2>
-        <ul class="event-list">
-            {% for event in events %}
-                <li>
-                    <span>{{ event[1] }} - {{ event[2] }} at {{ event[3] }}</span>
-                    <a href="/edit/{{ event[0] }}" class="edit-btn">Edit</a>
-                    <a href="/delete/{{ event[0] }}" class="delete-btn">Delete</a>
-                </li>
-            {% endfor %}
-        </ul>
+    <h1>Event Management System</h1>
 
-        <h2>Add Event</h2>
-        <form action="/add" method="post" class="event-form">
-            <input type="text" name="name" placeholder="Event Name" required>
-            <input type="date" name="date" required>
-            <input type="text" name="location" placeholder="Location" required>
-            <button type="submit">Add Event</button>
-        </form>
-    </div>
+    <!-- Search Bar -->
+    <form action="/search" method="GET">
+        <input type="text" name="query" placeholder="Search events..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Add Event Form -->
+    <form action="/add" method="POST">
+        <input type="text" name="name" placeholder="Event Name" required>
+        <input type="date" name="date" required>
+        <input type="text" name="location" placeholder="Location" required>
+        <button type="submit">Add Event</button>
+    </form>
+
+    <!-- Event List -->
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Actions</th>
+            <th>Register</th>
+        </tr>
+        {% for event in events %}
+        <tr>
+            <td>{{ event[1] }}</td>
+            <td>{{ event[2] }}</td>
+            <td>{{ event[3] }}</td>
+            <td>
+                <a href="/edit/{{ event[0] }}"><button>Edit</button></a>
+                <a href="/delete/{{ event[0] }}" onclick="return confirm('Are you sure?')"><button class="delete">Delete</button></a>
+            </td>
+            <td>
+                <form action="/register" method="POST">
+                    <input type="hidden" name="event_id" value="{{ event[0] }}">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <button type="submit">Register</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Export CSV Button -->
+    <a href="/export"><button>Export as CSV</button></a>
 </body>
 </html>
