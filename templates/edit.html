@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Event</h1>
+        <form action="/edit/{{ event[0] }}" method="post">
+            <input type="text" name="name" value="{{ event[1] }}" required>
+            <input type="date" name="date" value="{{ event[2] }}" required>
+            <input type="text" name="location" value="{{ event[3] }}" required>
+            <button type="submit">Update Event</button>
+        </form>
+        <a href="/" class="back-btn">Back</a>
+    </div>
+</body>
+</html>
