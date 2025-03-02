@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrations</title>
+    <title>Event Registrations</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>Registered Users</h1>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Event Name</th>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-        {% for registration in registrations %}
-        <tr>
-            <td>{{ registration[0] }}</td>
-            <td>{{ registration[1] }}</td>
-            <td>{{ registration[2] }}</td>
-            <td>{{ registration[3] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <a href="/">Back to Home</a>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">👥 Registered Users</h1>
+        </div>
+    </div>
+    
+    <div class="container my-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="m-0"><i class="fas fa-users me-2"></i>Registration List</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Event Name</th>
+                                <th>User Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in registrations %}
+                            <tr>
+                                <td>{{ registration[0] }}</td>
+                                <td class="fw-bold">{{ registration[1] }}</td>
+                                <td><i class="fas fa-user me-2"></i>{{ registration[2] }}</td>
+                                <td><i class="fas fa-envelope me-2"></i>{{ registration[3] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
