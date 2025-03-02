@@ -90,6 +90,20 @@ def register():
     cur.close()
     return redirect('/')
 
+@app.route("/registrations")
+def view_registrations():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT registrations.id, events.name AS event_name, registrations.name, registrations.email 
+        FROM registrations 
+        JOIN events ON registrations.event_id = events.id
+    """)
+    registrations = cur.fetchall()
+    cur.close()
+    
+    return render_template("registrations.html", registrations=registrations)
+
+
 # Export Events as CSV
 @app.route('/export')
 def export():
