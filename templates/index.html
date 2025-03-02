@@ -88,41 +88,11 @@
                                     </a>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal{{ event[0] }}">
+                                    <button class="btn btn-success btn-sm" data-event-id="{{ event[0] }}" onclick="openRegisterModal(this)" type="button">
                                         <i class="fas fa-user-plus me-1"></i> Register
                                     </button>
                                 </td>
                             </tr>
-                            
-                            <!-- Registration Modal -->
-                            <div class="modal fade" id="registerModal{{ event[0] }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">
-                                                <i class="fas fa-ticket-alt me-2"></i>Register for {{ event[1] }}
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/register" method="POST">
-                                                <input type="hidden" name="event_id" value="{{ event[0] }}">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="name" class="form-control" id="regName{{ event[0] }}" placeholder="Your Name" required>
-                                                    <label for="regName{{ event[0] }}">Your Name</label>
-                                                </div>
-                                                <div class="form-floating mb-3">
-                                                    <input type="email" name="email" class="form-control" id="regEmail{{ event[0] }}" placeholder="Your Email" required>
-                                                    <label for="regEmail{{ event[0] }}">Your Email</label>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary w-100">
-                                                    <i class="fas fa-check-circle me-2"></i>Complete Registration
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -141,6 +111,46 @@
         </div>
     </div>
     
+    <!-- Registration Modals - Moved outside the table loop -->
+    {% for event in events %}
+    <div class="modal fade" id="registerModal{{ event[0] }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-ticket-alt me-2"></i>Register for {{ event[1] }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/register" method="POST">
+                        <input type="hidden" name="event_id" value="{{ event[0] }}">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="name" class="form-control" id="regName{{ event[0] }}" placeholder="Your Name" required>
+                            <label for="regName{{ event[0] }}">Your Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" name="email" class="form-control" id="regEmail{{ event[0] }}" placeholder="Your Email" required>
+                            <label for="regEmail{{ event[0] }}">Your Email</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-check-circle me-2"></i>Complete Registration
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to manually open the modal
+        function openRegisterModal(button) {
+            const eventId = button.getAttribute('data-event-id');
+            const myModal = new bootstrap.Modal(document.getElementById('registerModal' + eventId));
+            myModal.show();
+        }
+    </script>
 </body>
 </html>
