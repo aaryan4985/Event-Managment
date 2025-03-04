@@ -3,135 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Event Hub - Event Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9) !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        }
+
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--secondary-color), #27ae60) !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(46, 204, 113, 0.05);
+        }
+
+        .btn-outline-success {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9) !important;
+        }
+
+        footer {
+            background-color: #f8f9fa !important;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="page-header">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container">
-            <h1 class="page-title">🎉 Event Management System</h1>
-        </div>
-    </div>
-    
-    <div class="container my-5">
-        <!-- Search Bar -->
-        <form action="/search" method="GET" class="search-form d-flex">
-            <input type="text" name="query" class="form-control flex-grow-1" placeholder="Search events..." value="{{ query }}">
-            <button type="submit" class="btn btn-primary ms-2"><i class="fas fa-search"></i></button>
-        </form>
-        
-        <!-- Add Event Form -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="m-0"><i class="fas fa-calendar-plus me-2"></i>Add New Event</h4>
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-calendar-check me-2"></i>Event Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarActions">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarActions">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="/registrations" class="nav-link">
+                            <i class="fas fa-users me-1"></i> Registrations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/export" class="nav-link">
+                            <i class="fas fa-file-csv me-1"></i> Export
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="card-body">
-                <form action="/add" method="POST">
-                    <div class="row g-3">
-                        <div class="col-md-5">
-                            <div class="form-floating">
-                                <input type="text" name="name" class="form-control" id="eventName" placeholder="Event Name" required>
-                                <label for="eventName">Event Name</label>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header text-white">
+                        <h4 class="m-0">
+                            <i class="fas fa-calendar-plus me-2"></i>Create New Event
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/add" method="POST">
+                            <div class="mb-3">
+                                <label for="eventName" class="form-label">Event Name</label>
+                                <input type="text" name="name" class="form-control" id="eventName" placeholder="Enter event name" required>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-floating">
+                            <div class="mb-3">
+                                <label for="eventDate" class="form-label">Event Date</label>
                                 <input type="date" name="date" class="form-control" id="eventDate" required>
-                                <label for="eventDate">Event Date</label>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="text" name="location" class="form-control" id="eventLocation" placeholder="Location" required>
-                                <label for="eventLocation">Location</label>
+                            <div class="mb-3">
+                                <label for="eventLocation" class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" id="eventLocation" placeholder="Enter event location" required>
                             </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-plus-circle me-2"></i>Add Event
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="m-0">
+                                <i class="fas fa-calendar-alt me-2"></i>Upcoming Events
+                            </h4>
+                            <form action="/search" method="GET" class="d-flex" style="width: 250px;">
+                                <input type="text" name="query" class="form-control form-control-sm" placeholder="Search events..." value="{{ query }}">
+                                <button type="submit" class="btn btn-light btn-sm ms-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success w-100 mt-3">
-                        <i class="fas fa-plus-circle me-2"></i>Add Event
-                    </button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Event List -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="m-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Events</h4>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Date</th>
-                                <th>Location</th>
-                                <th class="text-center">Actions</th>
-                                <th class="text-center">Register</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for event in events %}
-                            <tr>
-                                <td class="fw-bold">{{ event[1] }}</td>
-                                <td><i class="far fa-calendar-alt me-2"></i>{{ event[2] }}</td>
-                                <td><i class="fas fa-map-marker-alt me-2"></i>{{ event[3] }}</td>
-                                <td class="text-center">
-                                    <a href="/edit/{{ event[0] }}" class="btn btn-warning btn-sm me-1">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="/delete/{{ event[0] }}" onclick="return confirm('Are you sure you want to delete this event?')" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-success btn-sm" data-event-id="{{ event[0] }}" onclick="openRegisterModal(this)" type="button">
-                                        <i class="fas fa-user-plus me-1"></i> Register
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Event Name</th>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th class="text-center">Actions</th>
+                                        <th class="text-center">Register</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td class="fw-bold">{{ event[1] }}</td>
+                                        <td>
+                                            <i class="far fa-calendar-alt me-2 text-primary"></i>
+                                            {{ event[2] }}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+                                            {{ event[3] }}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="/edit/{{ event[0] }}" class="btn btn-outline-warning btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="/delete/{{ event[0] }}" 
+                                                   onclick="return confirm('Are you sure you want to delete this event?')" 
+                                                   class="btn btn-outline-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-outline-success btn-sm" 
+                                                    data-event-id="{{ event[0] }}" 
+                                                    onclick="openRegisterModal(this)">
+                                                <i class="fas fa-user-plus me-1"></i> Register
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Export & View Buttons -->
-        <div class="d-flex justify-content-center gap-3">
-            <a href="/export" class="btn btn-warning">
-                <i class="fas fa-file-csv me-2"></i>Export as CSV
-            </a>
-            <a href="/registrations" class="btn btn-info">
-                <i class="fas fa-users me-2"></i>View Registrations
-            </a>
-        </div>
     </div>
     
-    <!-- Registration Modals - Moved outside the table loop -->
+    <!-- Registration Modals (Unchanged from previous version) -->
     {% for event in events %}
     <div class="modal fade" id="registerModal{{ event[0] }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-ticket-alt me-2"></i>Register for {{ event[1] }}
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="/register" method="POST">
                         <input type="hidden" name="event_id" value="{{ event[0] }}">
-                        <div class="form-floating mb-3">
-                            <input type="text" name="name" class="form-control" id="regName{{ event[0] }}" placeholder="Your Name" required>
-                            <label for="regName{{ event[0] }}">Your Name</label>
+                        <div class="mb-3">
+                            <label for="regName{{ event[0] }}" class="form-label">Your Name</label>
+                            <input type="text" name="name" class="form-control" id="regName{{ event[0] }}" placeholder="Enter your name" required>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" name="email" class="form-control" id="regEmail{{ event[0] }}" placeholder="Your Email" required>
-                            <label for="regEmail{{ event[0] }}">Your Email</label>
+                        <div class="mb-3">
+                            <label for="regEmail{{ event[0] }}" class="form-label">Your Email</label>
+                            <input type="email" name="email" class="form-control" id="regEmail{{ event[0] }}" placeholder="Enter your email" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="fas fa-check-circle me-2"></i>Complete Registration
@@ -143,9 +226,17 @@
     </div>
     {% endfor %}
     
+    <footer class="py-3 mt-4">
+        <div class="container text-center">
+            <p class="mb-0 text-muted">
+                <i class="fas fa-calendar-check me-2"></i>
+                Event Hub © 2024 | Manage your events with ease
+            </p>
+        </div>
+    </footer>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Function to manually open the modal
         function openRegisterModal(button) {
             const eventId = button.getAttribute('data-event-id');
             const myModal = new bootstrap.Modal(document.getElementById('registerModal' + eventId));
